@@ -62,8 +62,7 @@ def matchmap(flow_fw, flow_bw, factor=1.0):
 
     result = l2_sq > THRESH1 * sq_sum + THRESH2
 
-    result = result | outwards_map
-    return result
+    return result | outwards_map
 
 
 def readEXR(filepath):
@@ -74,8 +73,12 @@ def readEXR(filepath):
     w = dw.max.x - dw.min.x + 1
     h = dw.max.y - dw.min.y + 1
 
-    full_img = np.dstack([np.frombuffer(exrfile.channel(c), dtype=np.float32).reshape((h,w)) for c in ["R", "G", "B"]])
-    return full_img
+    return np.dstack(
+        [
+            np.frombuffer(exrfile.channel(c), dtype=np.float32).reshape((h, w))
+            for c in ["R", "G", "B"]
+        ]
+    )
 
 
 def get_invalid(depth):
@@ -100,8 +103,7 @@ def project(Xs, intrinsics):
     y = fy * (Y / Z) + cy
     d = 1.0 / Z
 
-    coords = np.stack([x, y, d], axis=-1)
-    return coords
+    return np.stack([x, y, d], axis=-1)
 
 
 def inv_project(depths, intrinsics):
